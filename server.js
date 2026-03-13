@@ -22,7 +22,27 @@ app.get('/', (req, res) => {
   res.json({ message: 'Server is running', docs: '/api-docs' });
 });
 
+app.get('/api', (req, res) => {
+  res.json({ 
+    message: 'NeedCollab API',
+    version: '1.0.0',
+    docs: '/api-docs',
+    endpoints: {
+      needs: '/api/needs',
+      offers: '/api/offers',
+      profiles: '/api/profiles',
+      collaborations: '/api/collaborations',
+      messages: '/api/messages',
+      notifications: '/api/notifications',
+      votes: '/api/votes',
+      auth: ['/api/send-auth-email', '/api/otp_codes']
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });
+
+module.exports = app;
