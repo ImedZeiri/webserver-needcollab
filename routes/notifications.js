@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { callEdgeFunction } = require('./supabaseClient');
 
 /**
  * @swagger
@@ -10,8 +11,9 @@ const router = express.Router();
  *       200:
  *         description: Liste des notifications
  */
-router.get('/', (req, res) => {
-  res.json({ message: 'GET notifications' });
+router.get('/', async (req, res) => {
+  const { data, status } = await callEdgeFunction('notifications', 'GET', null, { id: req.query.id });
+  res.status(status).json(data);
 });
 
 /**
@@ -23,8 +25,9 @@ router.get('/', (req, res) => {
  *       201:
  *         description: Notification créée
  */
-router.post('/', (req, res) => {
-  res.status(201).json({ message: 'POST notifications' });
+router.post('/', async (req, res) => {
+  const { data, status } = await callEdgeFunction('notifications', 'POST', req.body);
+  res.status(status).json(data);
 });
 
 /**
@@ -43,8 +46,9 @@ router.post('/', (req, res) => {
  *       200:
  *         description: Notification mise à jour
  */
-router.put('/', (req, res) => {
-  res.json({ message: 'PUT notifications', id: req.query.id });
+router.put('/', async (req, res) => {
+  const { data, status } = await callEdgeFunction('notifications', 'PUT', req.body, { id: req.query.id });
+  res.status(status).json(data);
 });
 
 /**
@@ -63,8 +67,9 @@ router.put('/', (req, res) => {
  *       200:
  *         description: Notification supprimée
  */
-router.delete('/', (req, res) => {
-  res.json({ message: 'DELETE notifications', id: req.query.id });
+router.delete('/', async (req, res) => {
+  const { data, status } = await callEdgeFunction('notifications', 'DELETE', null, { id: req.query.id });
+  res.status(status).json(data);
 });
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { callEdgeFunction } = require('./supabaseClient');
 
 /**
  * @swagger
@@ -10,8 +11,9 @@ const router = express.Router();
  *       200:
  *         description: Email envoyé
  */
-router.post('/send-auth-email', (req, res) => {
-  res.json({ message: 'POST send-auth-email' });
+router.post('/send-auth-email', async (req, res) => {
+  const { data, status } = await callEdgeFunction('send-auth-email', 'POST', req.body);
+  res.status(status).json(data);
 });
 
 /**
@@ -23,8 +25,9 @@ router.post('/send-auth-email', (req, res) => {
  *       200:
  *         description: Liste des codes OTP
  */
-router.get('/otp_codes', (req, res) => {
-  res.json({ message: 'GET otp_codes' });
+router.get('/otp_codes', async (req, res) => {
+  const { data, status } = await callEdgeFunction('otp_codes', 'GET', null, { id: req.query.id });
+  res.status(status).json(data);
 });
 
 /**
@@ -36,8 +39,9 @@ router.get('/otp_codes', (req, res) => {
  *       201:
  *         description: Code OTP créé
  */
-router.post('/otp_codes', (req, res) => {
-  res.status(201).json({ message: 'POST otp_codes' });
+router.post('/otp_codes', async (req, res) => {
+  const { data, status } = await callEdgeFunction('otp_codes', 'POST', req.body);
+  res.status(status).json(data);
 });
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { callEdgeFunction } = require('./supabaseClient');
 
 /**
  * @swagger
@@ -10,8 +11,9 @@ const router = express.Router();
  *       200:
  *         description: Liste des profils
  */
-router.get('/', (req, res) => {
-  res.json({ message: 'GET profiles' });
+router.get('/', async (req, res) => {
+  const { data, status } = await callEdgeFunction('profiles', 'GET', null, { id: req.query.id });
+  res.status(status).json(data);
 });
 
 /**
@@ -23,8 +25,9 @@ router.get('/', (req, res) => {
  *       201:
  *         description: Profil créé
  */
-router.post('/', (req, res) => {
-  res.status(201).json({ message: 'POST profiles' });
+router.post('/', async (req, res) => {
+  const { data, status } = await callEdgeFunction('profiles', 'POST', req.body);
+  res.status(status).json(data);
 });
 
 /**
@@ -43,8 +46,9 @@ router.post('/', (req, res) => {
  *       200:
  *         description: Profil mis à jour
  */
-router.put('/', (req, res) => {
-  res.json({ message: 'PUT profiles', id: req.query.id });
+router.put('/', async (req, res) => {
+  const { data, status } = await callEdgeFunction('profiles', 'PUT', req.body, { id: req.query.id });
+  res.status(status).json(data);
 });
 
 /**
@@ -63,8 +67,9 @@ router.put('/', (req, res) => {
  *       200:
  *         description: Profil supprimé
  */
-router.delete('/', (req, res) => {
-  res.json({ message: 'DELETE profiles', id: req.query.id });
+router.delete('/', async (req, res) => {
+  const { data, status } = await callEdgeFunction('profiles', 'DELETE', null, { id: req.query.id });
+  res.status(status).json(data);
 });
 
 module.exports = router;
